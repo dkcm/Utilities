@@ -1,7 +1,7 @@
 /**
- * NumberUtility.java v0.2  5 December 2014 11:33:18 AM
+ * NumberUtility.java  v0.2  5 December 2014 11:33:18 AM
  *
- * Copyright © 2014 - 2015 Daniel Kuan.  All rights reserved.
+ * Copyright © 2014-2016 Daniel Kuan.  All rights reserved.
  */
 package org.ikankechil.util;
 
@@ -66,11 +66,33 @@ public final class NumberUtility {
                                        final double y2,
                                        final double... f) {
     // General equation of a straight line: y = mx + c
-    final double m = (y2 - y1) / (x2 - x1);
+    final double m = gradient(x1, y1, x2, y2); // m = (y2 - y1) / (x2 - x1)
     final double c = y1;
-    for (int x = x1 + 1, i = 1; x < x2; ++x, ++i) {
-      f[x] = m * i + c;
+
+    double y = c;
+    for (int x = x1 + 1; x < x2; ++x) {
+      f[x] = (y += m); // multiplication by repeated addition
     }
+  }
+
+  public static final double gradient(final double x1,
+                                      final double y1,
+                                      final double x2,
+                                      final double y2) {
+    return (y2 - y1) / (x2 - x1);
+  }
+
+  public static final double intercept(final double x,
+                                       final double y,
+                                       final double gradient) {
+    // General equation of a straight line: y = mx + c
+    return y - (gradient * x);
+  }
+
+  public static final double f(final double x,
+                               final double gradient,
+                               final double intercept) { // TODO rename method
+    return (gradient * x) + intercept; // y = f(x) = mx + c
   }
 
 }

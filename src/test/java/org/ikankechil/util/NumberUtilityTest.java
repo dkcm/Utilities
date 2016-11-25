@@ -1,7 +1,7 @@
 /**
- * NumberUtilityTest.java v0.1  5 December 2014 1:45:56 PM
+ * NumberUtilityTest.java  v0.1  5 December 2014 1:45:56 PM
  *
- * Copyright © 2014-2015 Daniel Kuan.  All rights reserved.
+ * Copyright © 2014-2016 Daniel Kuan.  All rights reserved.
  */
 package org.ikankechil.util;
 
