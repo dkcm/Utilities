@@ -1,7 +1,7 @@
 /**
  * TaskExecutor.java  v0.1  22 November 2008 1:03:17 AM
  *
- * Copyright © 2008-2015 Daniel Kuan.  All rights reserved.
+ * Copyright © 2008-2016 Daniel Kuan.  All rights reserved.
  */
 package org.ikankechil.synchronous;
 

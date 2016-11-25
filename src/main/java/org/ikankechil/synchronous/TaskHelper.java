@@ -1,7 +1,7 @@
 /**
  * TaskHelper.java  v0.1  2 December 2008 12:06:03 PM
  *
- * Copyright © 2008-2015 Daniel Kuan.  All rights reserved.
+ * Copyright © 2008-2016 Daniel Kuan.  All rights reserved.
  */
 package org.ikankechil.synchronous;
 

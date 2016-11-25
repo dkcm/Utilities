@@ -1,7 +1,7 @@
 /**
- * TaskCompletionService.java  v0.1  27 January 2012 10:13:20 PM
+ * TaskCompletionService.java  v0.2  27 January 2012 10:13:20 PM
  *
- * Copyright © 2012 Daniel Kuan.  All rights reserved.
+ * Copyright © 2012-2016 Daniel Kuan.  All rights reserved.
  */
 package org.ikankechil.synchronous;
 
@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
  * Type description goes here.
  *
  * @author Daniel Kuan
- * @version 0.1
+ * @version 0.2
  */
 public class TaskCompletionService<K, V> implements CompletionService<V> {
 
@@ -36,8 +36,8 @@ public class TaskCompletionService<K, V> implements CompletionService<V> {
     numberOfTasks = 0;
   }
 
-  public Future<V> submit(final Callable<V> task, final K operand) {
-    Future<V> future = completionService.submit(task);
+  Future<V> submit(final Callable<V> task, final K operand) {
+    final Future<V> future = completionService.submit(task);
     futures.put(future, operand);
     ++numberOfTasks;
     return future;
@@ -45,21 +45,23 @@ public class TaskCompletionService<K, V> implements CompletionService<V> {
 
   @Override
   public Future<V> submit(final Callable<V> task) {
-    Future<V> future = completionService.submit(task);
+    final Future<V> future = completionService.submit(task);
     ++numberOfTasks;
     return future;
   }
 
   @Override
   public Future<V> submit(final Runnable task, final V result) {
+    final Future<V> future = completionService.submit(task, result);
     ++numberOfTasks;
-    return completionService.submit(task, result);
+    return future;
   }
 
   @Override
   public Future<V> take() throws InterruptedException {
+    final Future<V> future = completionService.take();
     --numberOfTasks;
-    return completionService.take();
+    return future;
   }
 
   @Override
