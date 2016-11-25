@@ -1,7 +1,7 @@
 /**
  * ZipTextReader.java  v0.1  14 November 2014 1:41:05 PM
  *
- * Copyright © 2014-2015 Daniel Kuan.  All rights reserved.
+ * Copyright © 2014-2016 Daniel Kuan.  All rights reserved.
  */
 package org.ikankechil.io;
 

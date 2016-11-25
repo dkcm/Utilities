@@ -1,7 +1,7 @@
 /**
- * TextIOTest.java  v0.1  6 January 2014 2:00:35 AM
+ * TextIOTest.java  v0.2  6 January 2014 2:00:35 AM
  *
- * Copyright © 2014-2015 Daniel Kuan.  All rights reserved.
+ * Copyright © 2014-2016 Daniel Kuan.  All rights reserved.
  */
 package org.ikankechil.io;
 
@@ -15,24 +15,37 @@ import java.util.List;
 
 import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 
+/**
+ * Abstract superclass for all TextIO JUnit tests.
+ *
+ * @author Daniel Kuan
+ * @version 0.2
+ */
 public abstract class TextIOTest {
 
   @Rule
-  public final ExpectedException thrown      = ExpectedException.none();
+  public final ExpectedException thrown    = ExpectedException.none();
 
-  static final File              SOURCE_FILE = new File(".//./src/test/resources/" + TextIOTest.class.getSimpleName(), "A_20130107-20130111.csv");
+  static File                    SOURCE_FILE;
+  private static final String    DIRECTORY = ".//./src/test/resources/";
 
-  static final List<String>      EXPECTEDS   = new ArrayList<>();
+  static final List<String>      EXPECTEDS = new ArrayList<>();
   List<String>                   actuals;
 
-  static final char              SLASH       = '/';
+  static final char              SLASH     = '/';
+  private static final char      DOT       = '.';
 
-  @BeforeClass
-  public static void setUpBeforeClass() throws Exception {
+  private static final String    CSV       = ".csv";
+
+  public static void setUpBeforeClass(final Class<?> testClass) throws Exception {
+//    final String testDataFile = DIRECTORY + testClass.getName().replace(DOT, SLASH) + CSV;
+//    SOURCE_FILE = new File(TextIOTest.class.getClassLoader().getResource(testDataFile).toURI());
+    final String testDataFile = testClass.getSimpleName() + CSV;
+    SOURCE_FILE = new File(DIRECTORY, testDataFile);
+
     // read from file to reduce external dependencies
     EXPECTEDS.addAll(Files.readAllLines(SOURCE_FILE.toPath(), Charset.defaultCharset()));
   }

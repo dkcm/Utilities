@@ -1,7 +1,7 @@
 /**
- * TextTransform.java	v0.1	16 December 2013 11:46:14 PM
+ * TextTransform.java  v0.1  16 December 2013 11:46:14 PM
  *
- * Copyright © 2013-2015 Daniel Kuan.  All rights reserved.
+ * Copyright © 2013-2016 Daniel Kuan.  All rights reserved.
  */
 package org.ikankechil.io;
 

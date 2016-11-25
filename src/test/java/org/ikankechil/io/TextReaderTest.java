@@ -1,7 +1,7 @@
 /**
- * TextReaderTest.java	v0.1	1 January 2014 10:57:07 PM
+ * TextReaderTest.java  v0.2  1 January 2014 10:57:07 PM
  *
- * Copyright © 2014-2015 Daniel Kuan.  All rights reserved.
+ * Copyright © 2014-2016 Daniel Kuan.  All rights reserved.
  */
 package org.ikankechil.io;
 
@@ -21,7 +21,7 @@ import org.junit.Test;
  * JUnit test for <code>TextReader</code>.
  *
  * @author Daniel Kuan
- * @version
+ * @version 0.2
  */
 public class TextReaderTest extends TextIOTest {
 
@@ -34,21 +34,10 @@ public class TextReaderTest extends TextIOTest {
 
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
-    // build URL using Yahoo! Finance API
-    // http://ichart.finance.yahoo.com/table.csv?s=<Stock Symbol>
-    //                                          &a=<Start Month - 1>
-    //                                          &b=<Start Date>
-    //                                          &c=<Start Year>
-    //                                          &d=<End Month - 1>
-    //                                          &e=<End Date>
-    //                                          &f=<End Year>
-    //                                          &g=<Frequency>
-    //                                          &ignore=.csv
-    //
     // 5 days' worth of price data from 7 - 11 Jan 2013 for Agilent on NYSE
     sourceURL = new URL(BASE + "A" + PERIOD);
 
-    TextIOTest.setUpBeforeClass();
+    TextIOTest.setUpBeforeClass(TextReaderTest.class);
   }
 
   @AfterClass
@@ -128,7 +117,7 @@ public class TextReaderTest extends TextIOTest {
     for (int i = 0; i < 5; ++i) {
       r.read(new URL(BASE + "IBM"));
       final long end = System.currentTimeMillis();
-      System.out.println((end - start) + "ms");
+      System.out.println(end - start + "ms");
       start = end;
     }
   }

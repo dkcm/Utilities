@@ -1,7 +1,7 @@
 /**
- * TextWriterTest.java	v0.1	3 January 2014 1:12:20 AM
+ * TextWriterTest.java  v0.1  3 January 2014 1:12:20 AM
  *
- * Copyright © 2014-2015 Daniel Kuan.  All rights reserved.
+ * Copyright © 2014-2016 Daniel Kuan.  All rights reserved.
  */
 package org.ikankechil.io;
 

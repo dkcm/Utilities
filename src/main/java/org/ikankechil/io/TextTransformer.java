@@ -1,7 +1,7 @@
 /**
- * TextTransformer.java  v0.2  4 January 2014 7:20:35 PM
+ * TextTransformer.java  v0.3  4 January 2014 7:20:35 PM
  *
- * Copyright © 2013-2015 Daniel Kuan.  All rights reserved.
+ * Copyright © 2013-2016 Daniel Kuan.  All rights reserved.
  */
 package org.ikankechil.io;
 
@@ -12,14 +12,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Type description goes here.
+ * Transforms plain text.
  *
  * @author Daniel Kuan
- * @version 0.2
+ * @version 0.3
  */
 public class TextTransformer {
 
   private final TextTransform transform;
+  private final int           skippedRows;
   private final boolean       reverseOrder;
 
   private static final String EMPTY  = "";
@@ -27,19 +28,21 @@ public class TextTransformer {
   private static final Logger logger = LoggerFactory.getLogger(TextTransformer.class);
 
   public TextTransformer(final TextTransform transform) {
-    // source data order is kept "as-is" by default
-    this(transform, false);
+    // by default, no rows are skipped and source data order is kept "as-is"
+    this(transform, 0, false);
   }
 
   /**
-   * @param transform
+   * @param transform the <code>TextTransform</code> to apply
+   * @param skippedRows the number of rows to skip when transforming
    * @param reverseOrder if true, reverse the order of incoming source data
    */
-  public TextTransformer(final TextTransform transform, final boolean reverseOrder) {
+  public TextTransformer(final TextTransform transform, final int skippedRows, final boolean reverseOrder) {
     if (transform == null) {
       throw new NullPointerException("Null transform");
     }
     this.transform = transform;
+    this.skippedRows = (skippedRows < 0) ? 0 : skippedRows;
     this.reverseOrder = reverseOrder;
   }
 
@@ -55,8 +58,12 @@ public class TextTransformer {
     // lines to take in as input during each iteration, whereas TextTransform is
     // concerned with transforming each individual line
 
+    // TODO optimise row skipping and line reversal
+    if (skippedRows > 0) {
+      lines.subList(0, skippedRows).clear();
+    }
     if (reverseOrder) {
-      Collections.reverse(lines); // TODO optimize
+      Collections.reverse(lines);
       logger.debug("Reversed lines' order");
     }
     lines.add(EMPTY);

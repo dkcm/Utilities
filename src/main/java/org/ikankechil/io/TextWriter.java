@@ -1,7 +1,7 @@
 /**
  * TextWriter.java  v0.2  17 December 2013 10:34:04 PM
  *
- * Copyright © 2013-2015 Daniel Kuan.  All rights reserved.
+ * Copyright © 2013-2016 Daniel Kuan.  All rights reserved.
  */
 package org.ikankechil.io;
 
@@ -17,7 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Type description goes here.
+ * Writes plain text to <code>File</code> or an <code>OutputStream</code>.
  *
  * @author Daniel Kuan
  * @version 0.2
@@ -68,5 +68,26 @@ public class TextWriter {
     }
     logger.debug("Lines written: {}", lines.size());
   }
+
+//  public void write(final Collection<byte[]> lines, final File destination, final int size)
+//      throws IOException {
+//    String path;
+//    logger.info("Writing file: {}", path = destination.toString());
+//
+//    write(lines, new FileOutputStream(destination), size < 1 ? BUFFER_SIZE : size);
+//
+//    logger.info("File written: {}", path);
+//  }
+//
+//  private void write(final Collection<byte[]> lines, final OutputStream output, final int size)
+//      throws IOException {
+//    // write all lines to output TODO refer to Files.write(Path path, byte[] bytes, OpenOption... options)
+//    logger.info("Buffer size: {}", size);
+//    BufferedOutputStream stream = new BufferedOutputStream(output, size);
+//    for (byte[] line : lines) {
+//      stream.write(line);
+//    }
+//    stream.close();
+//  }
 
 }

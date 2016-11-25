@@ -1,16 +1,12 @@
 /**
- * TextTransformerTest.java	v0.1	5 January 2014 11:32:15 PM
+ * TextTransformerTest.java  v0.3  5 January 2014 11:32:15 PM
  *
- * Copyright © 2014-2015 Daniel Kuan.  All rights reserved.
+ * Copyright © 2014-2016 Daniel Kuan.  All rights reserved.
  */
 package org.ikankechil.io;
 
 import static org.junit.Assert.*;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,14 +20,13 @@ import org.slf4j.LoggerFactory;
  * JUnit test for <code>TextTransformer</code>.
  *
  * @author Daniel Kuan
- * @version
+ * @version 0.3
  */
 public class TextTransformerTest extends TextIOTest {
 
   private final TextTransformer          transformer = new TextTransformer(TRANSFORM);
 
   private static final TestTextTransform TRANSFORM   = new TestTextTransform();
-  private static final Source            SOURCE      = new Source();
 
   static final Logger                    logger      = LoggerFactory.getLogger(TextTransformerTest.class);
 
@@ -39,11 +34,7 @@ public class TextTransformerTest extends TextIOTest {
 
     private static List<String> sourceLines;
 
-    void readLines(final File file) throws IOException {
-      sourceLines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
-    }
-
-    List<String> newLines() {
+    static List<String> newLines() {
       final ArrayList<String> newLines = new ArrayList<>(sourceLines.size());
       for (final String sourceLine : sourceLines) {
         newLines.add(new String(sourceLine));
@@ -51,14 +42,19 @@ public class TextTransformerTest extends TextIOTest {
       return newLines;
     }
 
+    static void loadLines(final List<String> froms) {
+      sourceLines = new ArrayList<>(froms);
+    }
+
   }
 
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
-    SOURCE.readLines(SOURCE_FILE);
-    final List<String> sourceLines = SOURCE.newLines();
+    TextIOTest.setUpBeforeClass(TextTransformerTest.class);
+    Source.loadLines(EXPECTEDS);
 
-    for (final String line : sourceLines) {
+    EXPECTEDS.clear();
+    for (final String line : Source.newLines()) {
       EXPECTEDS.add(TRANSFORM.transform(line));
     }
   }
@@ -78,6 +74,15 @@ public class TextTransformerTest extends TextIOTest {
   }
 
   @Test
+  public void negativeSkippedRowsImmaterial() throws Exception {
+    final List<String> sourceLines = Source.newLines();
+    actuals = new TextTransformer(TRANSFORM, -1, false).transform(sourceLines);
+    compare();
+    assertEquals(sourceLines, actuals);
+
+  }
+
+  @Test
   public void emptySource() throws Exception {
     final List<String> emptySource = new ArrayList<>();
     actuals = transformer.transform(emptySource);
@@ -93,22 +98,44 @@ public class TextTransformerTest extends TextIOTest {
 
   @Test
   public void transform() throws Exception {
-    final List<String> sourceLines = SOURCE.newLines();
+    final List<String> sourceLines = Source.newLines();
     actuals = transformer.transform(sourceLines);
     compare();
+    assertEquals(sourceLines, actuals);
   }
 
   @Test
   public void transformReverseOrder() throws Exception {
     Collections.reverse(EXPECTEDS);
-    final TextTransformer rot = new TextTransformer(TRANSFORM, true);
-    final List<String> sourceLines = SOURCE.newLines();
+    final List<String> sourceLines = Source.newLines();
+    final TextTransformer rot = new TextTransformer(TRANSFORM, 0, true);
     try {
       actuals = rot.transform(sourceLines);
       compare();
+      assertEquals(sourceLines, actuals);
     }
     finally {
       Collections.reverse(EXPECTEDS);
+    }
+  }
+
+  @Test
+  public void transformSkipRows() throws Exception {
+    final int skippedRows = 3;
+    final List<String> expectedSkippedRows = new ArrayList<>(skippedRows);
+    for (int i = 0; i < skippedRows; ++i) {
+      expectedSkippedRows.add(EXPECTEDS.remove(0));
+    }
+
+    final List<String> sourceLines = Source.newLines();
+    final TextTransformer srt = new TextTransformer(TRANSFORM, skippedRows, false);
+    try {
+      actuals = srt.transform(sourceLines);
+      compare();
+      assertEquals(sourceLines, actuals);
+    }
+    finally {
+      assertTrue(EXPECTEDS.addAll(0, expectedSkippedRows));
     }
   }
 
