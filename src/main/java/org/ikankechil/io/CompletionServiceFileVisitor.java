@@ -1,7 +1,7 @@
 /**
- * CompletionServiceFileVisitor.java  v0.1  28 October 2014 1:42:58 PM
+ * CompletionServiceFileVisitor.java  v0.2  28 October 2014 1:42:58 PM
  *
- * Copyright © 2014-2015 Daniel Kuan.  All rights reserved.
+ * Copyright © 2014-2016 Daniel Kuan.  All rights reserved.
  */
 package org.ikankechil.io;
 
@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
  * pattern matching supports "glob" and "regex" syntaxes.
  *
  * @author Daniel Kuan
- * @version 0.1
+ * @version 0.2
  * @param <V> the result type of <code>TaskHelper</code>
  */
 public class CompletionServiceFileVisitor<V> extends SimpleFileVisitor<Path> {
@@ -44,7 +44,7 @@ public class CompletionServiceFileVisitor<V> extends SimpleFileVisitor<Path> {
   private Path                         startDirectory;
   protected int                        numberOfTasks;
   private final List<V>                results;
-  private final List<Throwable>        failures;
+  private final Map<Path, Throwable>   failures;
   private final Map<Future<V>, Path>   futures;
 
   protected final TaskHelper<Path, V>  taskHelper;
@@ -84,7 +84,7 @@ public class CompletionServiceFileVisitor<V> extends SimpleFileVisitor<Path> {
     logger.debug("ExecutorService used: {}", executor);
     startDirectory = null;
     numberOfTasks = 0;
-    failures = new ArrayList<>();
+    failures = new HashMap<>();
     results = new ArrayList<>();
     futures = new HashMap<>();
 
@@ -146,22 +146,23 @@ public class CompletionServiceFileVisitor<V> extends SimpleFileVisitor<Path> {
       try {
         for (int t = 0; t < numberOfTasks; ++t) {
           final Future<V> future = completionService.take();
+          final Path file = futures.get(future);
           try {
             results.add(future.get());
           }
           catch (final ExecutionException eE) {
             taskHelper.handleExecutionFailure(eE, dir);
-            failures.add(eE);
+            failures.put(file, eE);
             logger.warn("Task failed for: {}.  Cause: {}",
-                        futures.get(future),
+                        file,
                         eE.getCause(),
                         eE);
           }
           catch (final CancellationException cE) {
             taskHelper.handleTaskCancellation(cE, dir);
-            failures.add(cE);
+            failures.put(file, cE);
             logger.info("Task cancelled for: {}.  Cause: {}",
-                        futures.get(future),
+                        file,
                         cE.getCause(),
                         cE);
           }
@@ -182,7 +183,7 @@ public class CompletionServiceFileVisitor<V> extends SimpleFileVisitor<Path> {
     return results;
   }
 
-  public List<Throwable> failures() {
+  public Map<Path, Throwable> failures() {
     return failures;
   }
 

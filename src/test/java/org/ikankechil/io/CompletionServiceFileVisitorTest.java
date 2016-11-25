@@ -1,7 +1,7 @@
 /**
- * CompletionServiceFileVisitorTest.java v0.1 7 April 2015 11:44:48 AM
+ * CompletionServiceFileVisitorTest.java  v0.1  7 April 2015 11:44:48 AM
  *
- * Copyright © 2015 Daniel Kuan.  All rights reserved.
+ * Copyright © 2015-2016 Daniel Kuan.  All rights reserved.
  */
 package org.ikankechil.io;
 
