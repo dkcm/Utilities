@@ -1,7 +1,7 @@
 /**
- * StringUtility.java  v0.1  17 October 2008 7:15:48 PM
+ * StringUtility.java  v0.2  17 October 2008 7:15:48 PM
  *
- * Copyright © 2008-2012 Daniel Kuan.  All rights reserved.
+ * Copyright © 2008-2016 Daniel Kuan.  All rights reserved.
  */
 package org.ikankechil.util;
 
@@ -14,7 +14,7 @@ import java.util.List;
  * Utility class for string manipulation.
  *
  * @author Daniel Kuan
- * @version 0.1
+ * @version 0.2
  */
 public final class StringUtility {
 
@@ -331,6 +331,18 @@ public final class StringUtility {
       }
     }
     return location; // -1 if no matching characters
+  }
+
+  public static final int getChars(final String source,
+                                   final int sourceBegin,
+                                   final int sourceEnd,
+                                   final char destination[],
+                                   final int destinationBegin) {
+    int d = destinationBegin;
+    for (int s = sourceBegin; s < sourceEnd; ++s, ++d) {
+      destination[d] = source.charAt(s);
+    }
+    return d;
   }
 
 }
