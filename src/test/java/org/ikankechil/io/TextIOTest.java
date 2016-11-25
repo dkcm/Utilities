@@ -24,7 +24,7 @@ public abstract class TextIOTest {
   @Rule
   public final ExpectedException thrown      = ExpectedException.none();
 
-  static final File              SOURCE_FILE = new File(".//./tst/org/ikankechil/io", "A_20130107-20130111.csv");
+  static final File              SOURCE_FILE = new File(".//./src/test/resources/" + TextIOTest.class.getSimpleName(), "A_20130107-20130111.csv");
 
   static final List<String>      EXPECTEDS   = new ArrayList<>();
   List<String>                   actuals;

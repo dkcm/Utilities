@@ -47,7 +47,7 @@ public class CompletionServiceFileVisitorTest {
   private static final ExecutorService               EXECUTOR        = Executors.newSingleThreadExecutor();
 
   private static final String                        EMPTY           = "";
-  private static final Path                          START_PATH      = Paths.get(".//./tst/");
+  private static final Path                          START_PATH      = Paths.get(".//./src/test/resources/");
   private static final String                        ONLY_CSV        = "glob:*.csv";
   private static final String                        INVALID_PATTERN = "regex:{";
   private static final PathMatcher                   MATCHER         = FileSystems.getDefault().getPathMatcher(ONLY_CSV);
