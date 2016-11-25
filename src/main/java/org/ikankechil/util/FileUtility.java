@@ -1,16 +1,18 @@
 /**
- * FileUtility.java  v0.2  2 April 2014 1:17:12 AM
+ * FileUtility.java  v0.3  2 April 2014 1:17:12 AM
  *
- * Copyright © 2014-2015 Daniel Kuan.  All rights reserved.
+ * Copyright © 2014-2016 Daniel Kuan.  All rights reserved.
  */
 package org.ikankechil.util;
 
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.FileSystems;
 import java.nio.file.FileVisitOption;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.PathMatcher;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.EnumSet;
@@ -22,11 +24,15 @@ import org.slf4j.LoggerFactory;
  * Utility class for file operations.
  *
  * @author Daniel Kuan
- * @version 0.2
+ * @version 0.3
  */
 public final class FileUtility {
 
-  static final Logger logger = LoggerFactory.getLogger(FileUtility.class);
+  private static final String FILE_DELETED        = "File deleted: {}";
+  private static final String FILE_DOES_NOT_EXIST = "File does not exist: {}";
+  private static final String FILE_COPIED         = "File copied: {}";
+
+  static final Logger         logger              = LoggerFactory.getLogger(FileUtility.class);
 
   private FileUtility() { /* disallow instantiation */ }
 
@@ -54,19 +60,42 @@ public final class FileUtility {
         return deleteAndContinue(dir);
       }
 
-      private FileVisitResult deleteAndContinue(final Path path)
-          throws IOException {
-        if (Files.deleteIfExists(path)) {
-          logger.info("File deleted: {}", path);
-        }
-        else {
-          logger.info("File does not exist: {}", path);
-        }
+    });
+  }
 
+  /**
+   * Delete files that match a pattern.
+   *
+   * @param start
+   * @param syntaxAndPattern
+   * @throws IOException
+   */
+  public static final void deleteFiles(final Path start, final String syntaxAndPattern) throws IOException {
+    Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
+
+      private final PathMatcher matcher = FileSystems.getDefault().getPathMatcher(syntaxAndPattern);
+
+      @Override
+      public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs)
+          throws IOException {
+        if (matcher.matches(file.getFileName())) {
+          deleteAndContinue(file);
+        }
         return FileVisitResult.CONTINUE;
       }
 
     });
+  }
+
+  static final FileVisitResult deleteAndContinue(final Path path) throws IOException {
+    if (Files.deleteIfExists(path)) {
+      logger.info(FILE_DELETED, path);
+    }
+    else {
+      logger.info(FILE_DOES_NOT_EXIST, path);
+    }
+
+    return FileVisitResult.CONTINUE;
   }
 
   /**
@@ -101,7 +130,7 @@ public final class FileUtility {
       public FileVisitResult visitFile(final Path file, final BasicFileAttributes attrs)
           throws IOException {
         Files.copy(file, target.resolve(source.relativize(file)));
-        logger.info("File copied: {}", file);
+        logger.info(FILE_COPIED, file);
         return FileVisitResult.CONTINUE;
       }
 

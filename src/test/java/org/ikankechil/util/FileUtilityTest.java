@@ -1,7 +1,7 @@
 /**
- * FileUtilityTest.java	v0.1	23 May 2014 12:46:06 AM
+ * FileUtilityTest.java  v0.1  23 May 2014 12:46:06 AM
  *
- * Copyright © 2014-2015 Daniel Kuan.  All rights reserved.
+ * Copyright © 2014-2016 Daniel Kuan.  All rights reserved.
  */
 package org.ikankechil.util;
 
