@@ -1,7 +1,7 @@
 /**
- * URLInputStreamFactoryTest.java  v0.3  7 April 2015 10:06:58 AM
+ * URLInputStreamFactoryTest.java  v0.4  7 April 2015 10:06:58 AM
  *
- * Copyright © 2015-2016 Daniel Kuan.  All rights reserved.
+ * Copyright © 2015-2018 Daniel Kuan.  All rights reserved.
  */
 package org.ikankechil.io;
 
@@ -14,17 +14,14 @@ import java.net.URL;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.InflaterInputStream;
 
-import org.junit.Ignore;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 /**
  * JUnit test for <code>URLInputStreamFactory</code>.
  * <p>
  *
  * @author Daniel Kuan
- * @version 0.3
+ * @version 0.4
  */
 public class URLInputStreamFactoryTest {
 
@@ -33,14 +30,12 @@ public class URLInputStreamFactoryTest {
   private static final String    URL             = "http://httpbin.org/";
   private static final String    GZIP_URL        = "http://httpbin.org/gzip";
   private static final String    DEFLATE_URL     = "http://httpbin.org/deflate";
+  private static final String    BAD_URL         = "http://bad";
 
   private static final String    OK_URL_FACTORY  = "com.squareup.okhttp.OkUrlFactory";
   private static final String    OK_URL_FACTORY3 = "okhttp3.OkUrlFactory";
 
-//  private static final String    COOKIE          = "Cookie";
-
-  @Rule
-  public final ExpectedException thrown          = ExpectedException.none();
+  private static final String    COOKIE          = "Cookie";
 
   static {
     try {
@@ -56,9 +51,8 @@ public class URLInputStreamFactoryTest {
     }
   }
 
-  @Test
+  @Test(expected=NullPointerException.class)
   public void cannotCreateInputStreamWithNullURL() throws IOException {
-    thrown.expect(NullPointerException.class);
     URLInputStreamFactory.newInputStream(null);
   }
 
@@ -71,6 +65,7 @@ public class URLInputStreamFactoryTest {
       else {
         assertTrue(actual instanceof GZIPInputStream);
       }
+      assertNotNull(actual);
     }
   }
 
@@ -86,6 +81,7 @@ public class URLInputStreamFactoryTest {
     try (final InputStream actual = URLInputStreamFactory.newInputStream(new URL(URL))) {
       assertFalse(actual instanceof GZIPInputStream);
       assertFalse(actual instanceof InflaterInputStream);
+      assertNotNull(actual);
     }
   }
 
@@ -106,12 +102,22 @@ public class URLInputStreamFactoryTest {
     }
   }
 
-  @Ignore
+  @Test(expected=IOException.class)
+  public void retryOnceOnFailure() throws IOException {
+    URLInputStreamFactory.newInputStream(new URL(BAD_URL));
+
+//    final URL url = mock(URL.class);
+//    when(url.openConnection()).thenThrow(IOException.class)
+//                              .thenReturn(new URL(URL).openConnection());
+//    try (final InputStream actual = URLInputStreamFactory.newInputStream(url)) {
+//      assertNotNull(actual);
+//    }
+  }
+
   @Test
-  public void nullCookiesNotSet() throws IOException {
-    final URL url = new URL(URL);
-    try (final InputStream actual = URLInputStreamFactory.newInputStream(url, null)) {
-//      final String expected = url.openConnection().getHeaderField(COOKIE);
+  public void setCookie() throws IOException {
+    try (final InputStream actual = URLInputStreamFactory.newInputStream(new URL(URL), COOKIE)) {
+      assertNotNull(actual);
     }
   }
 

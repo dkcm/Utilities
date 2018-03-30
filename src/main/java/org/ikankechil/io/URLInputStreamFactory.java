@@ -1,7 +1,7 @@
 /**
- * URLInputStreamFactory.java  v0.4  4 November 2014 5:16:25 PM
+ * URLInputStreamFactory.java  v0.5  4 November 2014 5:16:25 PM
  *
- * Copyright © 2014-2016 Daniel Kuan.  All rights reserved.
+ * Copyright © 2014-2018 Daniel Kuan.  All rights reserved.
  */
 package org.ikankechil.io;
 
@@ -21,10 +21,10 @@ import org.slf4j.LoggerFactory;
 
 /**
  * An <code>InputStream</code> factory that reads from <code>URL</code>s.
- * <p>
+ *
  *
  * @author Daniel Kuan
- * @version 0.4
+ * @version 0.5
  */
 public final class URLInputStreamFactory {
   // TODO
@@ -111,7 +111,20 @@ public final class URLInputStreamFactory {
     return newInputStream(source, null);
   }
 
+  @SuppressWarnings("resource")
   public static final InputStream newInputStream(final URL source, final String cookie) throws IOException {
+    InputStream is;
+    try {
+      is = createInputStream(source, cookie);
+    }
+    catch (final IOException ioE) { // retry once on failure
+      logger.warn("I/O error encountered, retrying URL: {}", source);
+      is = createInputStream(source, cookie);
+    }
+    return is;
+  }
+
+  private static InputStream createInputStream(final URL source, final String cookie) throws IOException {
     final URLConnection connection = source.openConnection();
     if (!isTransparentEncoding) {
       // does not work well with OkHttp

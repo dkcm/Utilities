@@ -1,7 +1,7 @@
 /**
- * AbstractCommandLineInterface.java	v0.1	25 February 2016 11:27:19 pm
+ * AbstractCommandLineInterface.java  v0.1  25 February 2016 11:27:19 pm
  *
- * Copyright © 2016 Daniel Kuan.  All rights reserved.
+ * Copyright © 2016-2018 Daniel Kuan.  All rights reserved.
  */
 package org.ikankechil.ui;
 
@@ -19,7 +19,6 @@ import joptsimple.OptionSpec;
 
 /**
  *  A superclass for command-line applications.
- * <p>
  *
  *
  * @author Daniel Kuan
